@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Menu, X, ChevronDown, ArrowRight } from 'lucide-react';
 
 type NavigationProps = {
@@ -52,6 +53,7 @@ const menuItems = [
 
 export default function Navigation({ activeTab, setActiveTab }: NavigationProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const router = useRouter();
 
   return (
     <nav className="fixed top-0 w-full bg-[#0A0A0B]/95 backdrop-blur-xl z-[100]" role="navigation" aria-label="Menu principal">
@@ -126,7 +128,7 @@ export default function Navigation({ activeTab, setActiveTab }: NavigationProps)
         {/* CTA */}
         <div className="hidden xl:flex items-center gap-4">
           <button
-            onClick={() => setActiveTab('login')}
+            onClick={() => router.push('/login')}
             className="bg-[#FF6B00] text-white px-6 py-2.5 font-black text-[10px] uppercase italic hover:bg-white hover:text-black transition-all shadow-[0_0_20px_rgba(255,107,0,0.3)] skew-x-[-10deg]"
           >
             <span className="skew-x-[10deg] inline-block">PORTAL DO TIME</span>
@@ -184,7 +186,7 @@ export default function Navigation({ activeTab, setActiveTab }: NavigationProps)
           )}
           <button
             onClick={() => {
-              setActiveTab('login');
+              router.push('/login');
               setIsMobileMenuOpen(false);
             }}
             className="bg-[#FF6B00] text-white py-3 font-black uppercase text-center mt-4"

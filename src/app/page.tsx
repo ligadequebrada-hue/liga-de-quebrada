@@ -226,44 +226,6 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* Login */}
-        {activeTab === 'login' && (
-          <div className="pt-40 flex justify-center px-6 min-h-screen items-center">
-            <div className="w-full max-w-md bg-white/5 p-10 relative">
-              <h2 className="text-4xl font-black italic uppercase text-center mb-10">
-                Portal do Time
-              </h2>
-              <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-                <div>
-                  <label htmlFor="captain-id" className="sr-only">ID do Capitão</label>
-                  <input
-                    id="captain-id"
-                    type="text"
-                    placeholder="ID DO CAPITÃO"
-                    className="w-full bg-white/5 border border-white/10 p-4 outline-none focus:border-[#FF6B00] font-bold text-white transition-all uppercase placeholder:text-gray-600"
-                    autoComplete="username"
-                    required
-                  />
-                </div>
-                <div>
-                  <label htmlFor="captain-password" className="sr-only">Senha de Acesso</label>
-                  <input
-                    id="captain-password"
-                    type="password"
-                    placeholder="SENHA DE ACESSO"
-                    className="w-full bg-white/5 border border-white/10 p-4 outline-none focus:border-[#FF6B00] font-bold text-white transition-all placeholder:text-gray-600"
-                    autoComplete="current-password"
-                    required
-                  />
-                </div>
-                <button className="w-full bg-[#FF6B00] py-5 font-black uppercase italic tracking-[3px] hover:bg-white hover:text-black transition-all">
-                  ENTRAR NA ARENA
-                </button>
-              </form>
-            </div>
-          </div>
-        )}
-
         <Footer />
       </div>
     </div>
