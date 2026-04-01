@@ -1,0 +1,902 @@
+import React, { useState, useMemo, useEffect } from 'react';
+import { 
+  Trophy, Target, Shield, User, Calendar, Search, Filter, Menu, X, 
+  ChevronRight, Zap, Play, ArrowRight, Instagram, Facebook, Twitter, 
+  Youtube, Twitch, MoreHorizontal, CheckCircle2, XCircle, MinusCircle, 
+  ArrowUp, ArrowDown, Minus, TrendingUp, ChevronDown, Swords, Clock, 
+  Tv, MapPin, Star, CloudSun 
+} from 'lucide-react';
+
+// --- IMAGENS DOS TIMES ---
+const teamLogos = {
+  umCincoSete: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/1%2B5%2B7.png",
+  badBoa: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/Bad-Boa-FC.png",
+  bayernBeer: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/Bayern-Beer.png",
+  corona: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/Corona-FC.png",
+  correndoProBar: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/Correndo%20Pro%20Bar.png",
+  ecLock: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/EC%20LOCK%20MOTIVOS.png",
+  ferraresi: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/Ferraresi-FC.png",
+  interBahamas: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/Inter-de-Bahamas.png",
+  juventus: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/Juventus-sc.png",
+  mesmoNipe: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/Mesmo%20Nipe.png",
+  milionarios: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/Milion%C3%A1rios-FC.png",
+  milliducas: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/Milliducas-fc.png",
+  neblina: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/Neblina%20FC.png",
+  onix: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/Onix-FC.png",
+  realBarcelia: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/Real-Barc%C3%A9lia.png",
+  realMaster: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/Real-Master-SC.png",
+  redStar: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/Red-Star-FC.png",
+  santaCana: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/Santa%20Cana%20Futebol%20Clube.png",
+  tirandoOnda: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/Tirando%20onda.png",
+  ambreve: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/ambreve-ec.png",
+  atletiba: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/atletiba%20ec.png",
+  bemBolado: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/bem-bolado.png",
+  canaBrava: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/cana%20brava%20fc.png",
+  ecBronks: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/ec%20do%20bronks.png",
+  vasquinho: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/ec-vasquinho.png",
+  erro7: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/erro7-fc.png",
+  interLimoes: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/inter-de-lim%C3%B5es.png",
+  perere: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/perer%C3%AA-fut7.png",
+  realBetis: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/real-betis.png",
+  sem10tino: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/sem-10-tino.png",
+  sharks: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/sharks-04.png",
+  vp: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/vp.png",
+  zeroGrau: "https://xchezryog8h3d5kt.public.blob.vercel-storage.com/Liga%20de%20quebrada/zero-grau.png"
+};
+
+// --- DADOS E CONSTANTES ATUALIZADOS ---
+
+const topMandantes = [
+  { pos: 1, name: 'Santa Cana FC', pts: 10, pj: 4, sg: 18, logo: teamLogos.santaCana, movement: 1 },
+  { pos: 2, name: 'Real Master SC', pts: 9, pj: 4, sg: 2, logo: teamLogos.realMaster, movement: -1 },
+  { pos: 3, name: 'Milionários FC', pts: 7, pj: 4, sg: 3, logo: teamLogos.milionarios, movement: 0 },
+  { pos: 4, name: 'Neblina FC', pts: 3, pj: 4, sg: -13, logo: teamLogos.neblina, movement: 2 },
+  { pos: 5, name: 'Onix FC', pts: 1, pj: 4, sg: -10, logo: teamLogos.onix, movement: -2 },
+];
+
+const topVisitantes = [
+  { pos: 1, name: 'Red Star FC', pts: 12, pj: 4, sg: 15, logo: teamLogos.redStar, movement: 0 },
+  { pos: 2, name: 'Real Barcélia', pts: 9, pj: 4, sg: 8, logo: teamLogos.realBarcelia, movement: 1 },
+  { pos: 3, name: 'Tirando Onda', pts: 6, pj: 4, sg: 1, logo: teamLogos.tirandoOnda, movement: -1 },
+  { pos: 4, name: 'Ambreve EC', pts: 4, pj: 4, sg: -5, logo: teamLogos.ambreve, movement: 0 },
+  { pos: 5, name: 'Atletiba EC', pts: 2, pj: 4, sg: -8, logo: teamLogos.atletiba, movement: 0 },
+];
+
+const upcomingMatchesFutsal = [
+  { league: "LIGA DE QUEBRADA", date: "24/02", time: "19:00", weekday: "SÁBADO", city: "São Paulo", home: "Bem Bolado", away: "Cana Brava", homeLogo: teamLogos.bemBolado, awayLogo: teamLogos.canaBrava, homeColor: "#FFFFFF", awayColor: "#006400", round: "RODADA 01 • MASCULINO • FUTSAL", homeStars: 4, homeReviews: 210, awayStars: 5, awayReviews: 305 },
+  { league: "LIGA DE QUEBRADA", date: "24/02", time: "20:00", weekday: "SÁBADO", city: "Rio de Janeiro", home: "EC Bronks", away: "Vasquinho", homeLogo: teamLogos.ecBronks, awayLogo: teamLogos.vasquinho, homeColor: "#FFFFFF", awayColor: "#FF0000", round: "RODADA 01 • MASCULINO • FUTSAL", homeStars: 3, homeReviews: 150, awayStars: 4, awayReviews: 180 },
+  { league: "LIGA DE QUEBRADA", date: "25/02", time: "16:00", weekday: "DOMINGO", city: "Belo Horizonte", home: "Erro 7 FC", away: "Inter Limões", homeLogo: teamLogos.erro7, awayLogo: teamLogos.interLimoes, homeColor: "#FF0000", awayColor: "#FFFFFF", round: "RODADA 01 • MASCULINO • FUTSAL", homeStars: 5, homeReviews: 450, awayStars: 3, awayReviews: 120 },
+  { league: "LIGA DE QUEBRADA", date: "25/02", time: "18:00", weekday: "DOMINGO", city: "Porto Alegre", home: "Pererê Fut7", away: "Real Betis", homeLogo: teamLogos.perere, awayLogo: teamLogos.realBetis, homeColor: "#0099FF", awayColor: "#FF0000", round: "RODADA 01 • MASCULINO • FUTSAL", homeStars: 4, homeReviews: 200, awayStars: 4, awayReviews: 210 },
+  { league: "LIGA DE QUEBRADA", date: "26/02", time: "19:30", weekday: "SEGUNDA", city: "Curitiba", home: "Sem 10 Tino", away: "Sharks 04", homeLogo: teamLogos.sem10tino, awayLogo: teamLogos.sharks, homeColor: "#0000FF", awayColor: "#000000", round: "RODADA 01 • MASCULINO • FUTSAL", homeStars: 4, homeReviews: 190, awayStars: 5, awayReviews: 300 },
+  { league: "LIGA DE QUEBRADA", date: "26/02", time: "21:00", weekday: "SEGUNDA", city: "Salvador", home: "VP", away: "Zero Grau", homeLogo: teamLogos.vp, awayLogo: teamLogos.zeroGrau, homeColor: "#0000FF", awayColor: "#FF0000", round: "RODADA 01 • MASCULINO • FUTSAL", homeStars: 3, homeReviews: 100, awayStars: 3, awayReviews: 95 },
+];
+
+const upcomingMatchesFut7 = [
+  { league: "LIGA DE QUEBRADA", date: "26/02", time: "19:00", weekday: "SEGUNDA", city: "São Paulo", home: "1+5+7", away: "Bad Boa FC", homeLogo: teamLogos.umCincoSete, awayLogo: teamLogos.badBoa, homeColor: "#888888", awayColor: "#FFA500", round: "RODADA 01 • MASCULINO • FUT7", homeStars: 5, homeReviews: 310, awayStars: 4, awayReviews: 190 },
+  { league: "LIGA DE QUEBRADA", date: "26/02", time: "20:30", weekday: "SEGUNDA", city: "Osasco", home: "Bayern Beer", away: "Corona FC", homeLogo: teamLogos.bayernBeer, awayLogo: teamLogos.corona, homeColor: "#FFFFFF", awayColor: "#000000", round: "RODADA 01 • MASCULINO • FUT7", homeStars: 4, homeReviews: 220, awayStars: 5, awayReviews: 410 },
+  { league: "LIGA DE QUEBRADA", date: "27/02", time: "19:00", weekday: "TERÇA", city: "Guarulhos", home: "Correndo Pro Bar", away: "EC Lock", homeLogo: teamLogos.correndoProBar, awayLogo: teamLogos.ecLock, homeColor: "#000000", awayColor: "#FF4500", round: "RODADA 01 • MASCULINO • FUT7", homeStars: 3, homeReviews: 150, awayStars: 3, awayReviews: 140 },
+  { league: "LIGA DE QUEBRADA", date: "27/02", time: "21:00", weekday: "TERÇA", city: "Diadema", home: "Ferraresi FC", away: "Inter Bahamas", homeLogo: teamLogos.ferraresi, awayLogo: teamLogos.interBahamas, homeColor: "#333333", awayColor: "#FF6B00", round: "RODADA 01 • MASCULINO • FUT7", homeStars: 5, homeReviews: 500, awayStars: 5, awayReviews: 480 },
+];
+
+// --- COMPONENTES AUXILIARES ---
+
+const SectionDivider = () => (
+  <div className="max-w-7xl mx-auto px-6 w-full">
+    <div 
+      className="bg-[#0d0d0e] py-4 overflow-hidden relative flex justify-center items-center rounded-xl"
+      style={{
+          maskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
+          WebkitMaskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)'
+      }}
+    >
+        <div className="absolute inset-0 bg-[#FF6B00]/[0.03]"></div>
+        <div className="flex gap-12 justify-center items-center whitespace-nowrap opacity-30 select-none">
+           <span className="text-[10px] font-black italic uppercase tracking-[0.5em] text-white">LIGA DE QUEBRADA</span>
+           <span className="text-[10px] font-black text-[#FF6B00]">•</span>
+           <span className="text-[10px] font-black italic uppercase tracking-[0.5em] text-white">LIGA DE QUEBRADA</span>
+           <span className="text-[10px] font-black text-[#FF6B00]">•</span>
+           <span className="text-[10px] font-black italic uppercase tracking-[0.5em] text-white">LIGA DE QUEBRADA</span>
+           <span className="text-[10px] font-black text-[#FF6B00]">•</span>
+           <span className="text-[10px] font-black italic uppercase tracking-[0.5em] text-white">LIGA DE QUEBRADA</span>
+        </div>
+    </div>
+  </div>
+);
+
+const RankingTableMini = ({ title, data, accentColor = '#FF6B00', setActiveTab, badgeLabel }) => {
+  const getMiniRowBorderColor = (index) => {
+      if (index === 0) return '#FFD700'; 
+      if (index === 1) return '#C0C0C0'; 
+      return 'transparent'; 
+  };
+
+  return (
+    <div className="bg-[#090909] border border-white/10 rounded-xl p-5 w-full relative overflow-hidden h-full shadow-lg flex flex-col">
+      <div className="absolute top-0 left-0 w-full h-1" style={{ backgroundColor: accentColor }}></div>
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex items-center gap-3">
+          <div className="w-1.5 h-6 rounded-sm" style={{ backgroundColor: accentColor }}></div>
+          <h3 className="text-sm font-black uppercase text-gray-300 tracking-wider">{title}</h3>
+        </div>
+        
+        <button 
+          className="px-3 py-1 rounded-full text-[8px] font-black text-gray-500 uppercase tracking-widest bg-white/5 cursor-pointer hover:bg-white/10 hover:text-white transition-colors border border-white/10"
+          onClick={() => setActiveTab(badgeLabel === 'FUTSAL' ? 'ranking-futsal' : 'ranking-fut7')}
+        >
+          {badgeLabel}
+        </button>
+      </div>
+      
+      <div className="flex text-[9px] font-bold text-gray-500 mb-3 px-3 uppercase tracking-widest">
+        <span className="w-8">Pos</span><span className="flex-1">Time</span><span className="w-8 text-center">PTS</span><span className="w-8 text-center">PJ</span><span className="w-8 text-center">SG</span>
+      </div>
+      
+      <div className="space-y-2 flex-1">
+        {data.map((team, index) => (
+          <div 
+            key={team.name} 
+            className="relative flex items-center bg-[#151515] border border-white/5 rounded-md p-3 hover:bg-white/5 transition-colors group overflow-hidden"
+            style={{ 
+                borderLeft: `4px solid ${getMiniRowBorderColor(index)}` 
+            }}
+          >
+            <div className="w-12 flex flex-col items-center justify-center gap-0.5 pl-1">
+               <span className={`font-black text-sm ${index === 0 ? 'text-[#FFD700]' : index === 1 ? 'text-[#C0C0C0]' : 'text-white'}`}>{team.pos}º</span>
+               <div className="flex items-center justify-center">
+                    {team.movement > 0 && <span className="flex items-center text-[7px] font-bold text-[#10B981] leading-none"><ArrowUp size={6} strokeWidth={3} className="mr-px"/>{team.movement}</span>}
+                    {team.movement < 0 && <span className="flex items-center text-[7px] font-bold text-red-500 leading-none"><ArrowDown size={6} strokeWidth={3} className="mr-px"/>{Math.abs(team.movement)}</span>}
+                    {team.movement === 0 && <span className="flex items-center text-[7px] font-bold text-gray-600 leading-none"><Minus size={6} strokeWidth={3} /></span>}
+               </div>
+            </div>
+
+            <div className="flex-1 flex items-center gap-2 pl-2">
+               {/* IMAGEM DO TIME SUBSTITUINDO O CIRCULO */}
+               <img src={team.logo} alt={team.name} className="w-8 h-8 object-contain" />
+               <span className="text-[10px] font-bold text-white uppercase">{team.name}</span>
+            </div>
+            
+            <span className="w-8 text-center font-black text-white text-sm">{team.pts}</span>
+            <span className="w-8 text-center text-xs text-gray-400 font-bold">{team.pj}</span>
+            <span className="w-8 text-center text-xs text-gray-400 font-bold">{team.sg}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const FullRankingTable = ({ title, data, accentColor }) => {
+  const getRowBorderColor = (index) => {
+    if (index === 0) return '#FFD700'; 
+    if (index === 1) return '#C0C0C0'; 
+    return 'transparent'; 
+  };
+
+  return (
+    <div className="bg-[#0d0d0e] border border-white/5 rounded-2xl shadow-2xl flex flex-col h-full p-6">
+        <div className="flex items-center gap-4 mb-6 relative overflow-hidden pb-4 border-b border-white/5">
+             <div className="w-1.5 h-8 rounded-sm shrink-0" style={{ backgroundColor: accentColor }}></div>
+             <h3 className="text-3xl font-black italic uppercase tracking-tighter leading-none" style={{ color: accentColor }}>{title}</h3>
+        </div>
+
+        <div className="flex px-3 pb-2 text-[10px] font-black uppercase text-gray-500 tracking-widest mb-2">
+            <div className="w-20 text-center">Pos</div>
+            <div className="flex-1 pl-4">Clube</div>
+            <div className="w-12 text-center text-white">PTS</div>
+            <div className="w-10 text-center">J</div>
+            <div className="w-10 text-center">V</div>
+            <div className="w-10 text-center">E</div>
+            <div className="w-10 text-center">D</div>
+            <div className="w-10 text-center">SG</div>
+            <div className="w-24 text-center hidden xl:block">Últimos 5</div>
+        </div>
+
+        <div className="flex-1 overflow-y-auto space-y-2 pr-2 custom-scrollbar">
+            {data.map((team, idx) => (
+                <div 
+                  key={team.name} 
+                  className="flex items-center bg-[#151515] border border-white/5 rounded-md p-3 relative overflow-hidden hover:bg-[#202020] transition-colors"
+                  style={{ borderLeft: `5px solid ${getRowBorderColor(idx)}` }}
+                >
+                    <div className="w-20 flex flex-col items-center justify-center gap-1">
+                        <span className={`font-black text-xl ${idx === 0 ? 'text-[#FFD700]' : idx === 1 ? 'text-[#C0C0C0]' : 'text-gray-500'}`}>{team.pos}º</span>
+                        
+                        <div className="flex items-center justify-center">
+                            {team.movement > 0 && <span className="flex items-center text-[9px] font-bold text-[#10B981] leading-none"><ArrowUp size={10} strokeWidth={4} className="mr-0.5"/> {team.movement}</span>}
+                            {team.movement < 0 && <span className="flex items-center text-[9px] font-bold text-red-500 leading-none"><ArrowDown size={10} strokeWidth={4} className="mr-0.5"/> {Math.abs(team.movement)}</span>}
+                            {team.movement === 0 && <span className="flex items-center text-[9px] font-bold text-gray-600 leading-none"><Minus size={10} strokeWidth={4} /></span>}
+                        </div>
+                    </div>
+
+                    <div className="flex-1 flex items-center gap-4 pl-4">
+                        {/* IMAGEM DO TIME */}
+                        <img src={team.logo} alt={team.name} className="w-10 h-10 object-contain" />
+                        <span className="font-bold text-white uppercase tracking-wide text-sm">{team.name}</span>
+                    </div>
+
+                    <div className="w-12 text-center font-black text-lg text-white">{team.pts}</div>
+                    <div className="w-10 text-center font-medium text-sm text-gray-400">{team.j}</div>
+                    <div className="w-10 text-center font-medium text-sm text-gray-400">{team.v}</div>
+                    <div className="w-10 text-center font-medium text-sm text-gray-400">{team.e}</div>
+                    <div className="w-10 text-center font-medium text-sm text-gray-400">{team.d}</div>
+                    <div className="w-10 text-center font-bold text-sm text-white">{team.sg > 0 ? `+${team.sg}` : team.sg}</div>
+                    
+                    {/* Últimos 5 Jogos */}
+                    <div className="w-24 hidden xl:flex justify-center gap-1.5">
+                        {team.last5?.map((res, i) => (
+                            <div key={i} className={`w-2.5 h-2.5 rounded-full ${res === 'v' ? 'bg-[#10B981]' : res === 'e' ? 'bg-yellow-500' : 'bg-red-500'}`} title={res === 'v' ? 'Vitória' : res === 'e' ? 'Empate' : 'Derrota'}></div>
+                        ))}
+                    </div>
+                </div>
+            ))}
+        </div>
+    </div>
+  );
+};
+
+const NewMatchCard = ({ league, date, time, home, away, homeLogo, awayLogo, homeColor, awayColor, round, weekday, homeStars = 4, homeReviews = 125, awayStars = 5, awayReviews = 89, accentColor = '#FF6B00', city }) => {
+  const [weather, setWeather] = useState(null);
+
+  useEffect(() => {
+    if (city) {
+        setWeather({ temp: 24, description: 'Ensolarado' }); 
+    }
+  }, [city]);
+
+  const renderStars = (count) => (
+    <div className="flex gap-0.5 justify-center" style={{ color: accentColor }}>
+      {[...Array(5)].map((_, i) => (
+        <Star key={i} size={10} fill={i < count ? "currentColor" : "none"} className={i < count ? "" : "text-gray-600"} />
+      ))}
+    </div>
+  );
+
+  return (
+    <div className="bg-[#090909] border border-white/10 rounded-xl p-0 flex flex-col hover:bg-white/[0.02] transition-all group overflow-hidden relative w-[380px] shrink-0 h-full shadow-lg"
+         onMouseEnter={(e) => e.currentTarget.style.boxShadow = `0 0 15px -5px ${accentColor}40`}
+         onMouseLeave={(e) => e.currentTarget.style.boxShadow = '0 10px 15px -3px rgb(0 0 0 / 0.1)'}
+    >
+      <div className="absolute top-0 left-0 bottom-0 w-1.5" style={{ backgroundColor: accentColor }}></div>
+      
+      <div className="flex justify-between items-center p-3 bg-white/[0.02] pl-6 border-b border-white/5">
+          <div className="flex items-center gap-2 text-[9px] font-bold text-white uppercase tracking-wider">
+             <span>{league}</span>
+             <span className="text-gray-500">•</span>
+             <span>{time}</span>
+             <span className="text-gray-500">•</span>
+             <span>{date}</span>
+          </div>
+          <div 
+              className="text-[8px] font-black px-2 py-0.5 rounded uppercase tracking-wider"
+              style={{ color: accentColor, backgroundColor: `${accentColor}1A` }}
+          >
+              {weekday}
+          </div>
+      </div>
+      
+      <div className="p-6 flex justify-between items-center pl-8 pr-4 flex-1">
+          <div className="flex flex-col items-center gap-2 w-1/3">
+              {/* LOGO DO TIME DA CASA */}
+              <img src={homeLogo} alt={home} className="w-16 h-16 object-contain drop-shadow-md transform group-hover:scale-110 transition-transform" />
+              <span className="text-xs font-black text-white uppercase text-center leading-tight truncate w-full">{home}</span>
+              {renderStars(homeStars)}
+              <span className="text-[7px] font-bold text-gray-500 uppercase tracking-wide">AVALIAÇÕES ({homeReviews})</span>
+          </div>
+          <div className="flex flex-col items-center justify-center">
+              <span className="text-xl font-black italic text-[#4A4A4A]">VS</span>
+          </div>
+          <div className="flex flex-col items-center gap-2 w-1/3">
+              {/* LOGO DO TIME VISITANTE */}
+              <img src={awayLogo} alt={away} className="w-16 h-16 object-contain drop-shadow-md transform group-hover:scale-110 transition-transform" />
+              <span className="text-xs font-black text-white uppercase text-center leading-tight truncate w-full">{away}</span>
+              {renderStars(awayStars)}
+              <span className="text-[7px] font-bold text-gray-500 uppercase tracking-wide">AVALIAÇÕES ({awayReviews})</span>
+          </div>
+      </div>
+
+      <div className="flex justify-center items-center gap-[10px] my-[15px] text-[1.2rem] font-bold text-gray-400">
+          {weather ? (
+              <>
+                  <CloudSun size={24} className="text-gray-300" />
+                  <span>{Math.round(weather.temp)}°C</span>
+                  <span className="text-xs font-normal text-gray-500 ml-1">{weather.description}</span>
+              </>
+          ) : (
+              <span className="text-xs text-gray-600 animate-pulse">Carregando clima...</span>
+          )}
+      </div>
+      
+      <div className="mt-auto p-3 flex justify-between items-center bg-white/[0.02] pl-6 border-t border-white/5">
+          <span className="text-[9px] text-gray-500 font-bold uppercase tracking-wide">{round}</span>
+          <button 
+              className="flex items-center gap-1 text-[9px] font-bold uppercase hover:underline transition-all"
+              style={{ color: accentColor }}
+          >
+              <MapPin size={10} /> {city || 'LOCAL DO JOGO'}
+          </button>
+      </div>
+  </div>
+  );
+};
+
+const MatchesLoop = ({ matches, accentColor }) => {
+   const marqueeMatches = [...matches, ...matches];
+   return (
+      <div className="w-full overflow-hidden flex-1 h-full">
+          <style>
+          {`
+              @keyframes scroll-matches {
+                  0% { transform: translateX(0); }
+                  100% { transform: translateX(-50%); }
+              }
+              .animate-marquee-matches {
+                  display: flex;
+                  width: max-content;
+                  animation: scroll-matches 40s linear infinite;
+              }
+              .animate-marquee-matches:hover {
+                  animation-play-state: paused;
+              }
+          `}
+          </style>
+          <div className="animate-marquee-matches flex items-center gap-6 h-full items-stretch">
+              {marqueeMatches.map((match, i) => (
+                  <NewMatchCard key={i} {...match} accentColor={accentColor} />
+              ))}
+          </div>
+      </div>
+   )
+}
+
+const RankingPage = ({ category }) => {
+    // Generate data using the new structure with logos
+    const generateFullRanking = (type) => {
+        // Mock data generator for full page using the logos available
+        const teamsList = [
+            { name: 'Santa Cana FC', logo: teamLogos.santaCana },
+            { name: 'Real Master SC', logo: teamLogos.realMaster },
+            { name: 'Milionários FC', logo: teamLogos.milionarios },
+            { name: 'Neblina FC', logo: teamLogos.neblina },
+            { name: 'Onix FC', logo: teamLogos.onix },
+            { name: 'Red Star FC', logo: teamLogos.redStar },
+            { name: 'Real Barcélia', logo: teamLogos.realBarcelia },
+            { name: 'Tirando Onda', logo: teamLogos.tirandoOnda },
+            { name: 'Ambreve EC', logo: teamLogos.ambreve },
+            { name: 'Atletiba EC', logo: teamLogos.atletiba },
+        ];
+        
+        return teamsList.map((t, i) => ({
+            pos: i + 1,
+            name: t.name,
+            logo: t.logo,
+            pts: 30 - (i * 2),
+            j: 10,
+            v: 8 - i,
+            e: 1,
+            d: 1 + i,
+            sg: 10 - i,
+            last5: ['v', 'v', 'e', 'd', 'v'],
+            movement: i % 2 === 0 ? 1 : -1,
+            pointsAdded: 3
+        }));
+    };
+    
+    const fullMandantes = generateFullRanking('mandante');
+    const fullVisitantes = generateFullRanking('visitante');
+
+    return (
+    <div className="pt-32 pb-20 px-6 min-h-screen relative z-10">
+        <div className="max-w-[1400px] mx-auto">
+            <div className="mb-12 pl-6" style={{ borderLeft: '8px solid ' + (category === 'Futsal' ? '#FF6B00' : '#10B981') }}>
+                <h2 className="text-5xl font-black italic uppercase text-white mb-2 tracking-tighter">
+                    Classificação Oficial {category}
+                </h2>
+                <div className="flex items-center gap-4 mt-2">
+                    <span className="text-gray-400 font-bold uppercase tracking-widest text-sm">
+                        Temporada 2026
+                    </span>
+                    <div 
+                        className="flex items-center gap-2 px-3 py-1 rounded-full"
+                        style={{ backgroundColor: '#10B9811A' }}
+                    >
+                        <span 
+                            className="w-2 h-2 rounded-full animate-pulse" 
+                            style={{ backgroundColor: '#10B981', boxShadow: '0 0 10px #10B981' }}
+                        ></span>
+                        <span 
+                            className="text-[10px] font-black tracking-[2px] uppercase"
+                            style={{ color: '#10B981' }}
+                        >
+                            ONLINE
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div className="grid lg:grid-cols-2 gap-12">
+                <FullRankingTable title="RANKING MANDANTES" data={fullMandantes} accentColor={category === 'Futsal' ? '#FF6B00' : '#10B981'} />
+                <FullRankingTable title="RANKING VISITANTES" data={fullVisitantes} accentColor="#FFFFFF" />
+            </div>
+        </div>
+    </div>
+    );
+};
+
+const Navigation = ({ activeTab, setActiveTab, isMobileMenuOpen, setIsMobileMenuOpen }) => {
+  const menuItems = [
+    { label: 'HOME', id: 'home' },
+    { 
+        label: 'CALENDÁRIO', 
+        id: 'calendario-group',
+        hasSubmenu: true,
+        subItems: [
+            { label: 'FUTSAL', id: 'calendario-futsal' },
+            { label: 'FUT7', id: 'calendario-fut7' }
+        ]
+    },
+    { 
+        label: 'RANKING', 
+        id: 'ranking-group',
+        hasSubmenu: true,
+        subItems: [
+            { label: 'FUTSAL', id: 'ranking-futsal' },
+            { label: 'FUT7', id: 'ranking-fut7' }
+        ]
+    },
+    { 
+        label: 'PLAYOFFS', 
+        id: 'playoffs-group',
+        hasSubmenu: true,
+        subItems: [
+            { label: 'FUTSAL', id: 'playoffs-futsal' },
+            { label: 'FUT7', id: 'playoffs-fut7' }
+        ]
+    },
+    { label: 'INTERCLUBES', id: 'interclubes' },
+    { 
+        label: 'NEWS', 
+        id: 'news-group',
+        hasSubmenu: true,
+        subItems: [
+            { label: 'FUTSAL', id: 'news-futsal' },
+            { label: 'FUT7', id: 'news-fut7' }
+        ]
+    },
+    { label: 'VOX ESPORTES', id: 'vox' }
+  ];
+
+  return (
+    <nav className="fixed top-0 w-full bg-[#0A0A0B]/95 backdrop-blur-xl z-[100]">
+      <style>
+        {`
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+          body { font-family: 'Inter', sans-serif; }
+        `}
+      </style>
+      <div className="max-w-[1400px] mx-auto px-6 h-24 flex justify-between items-center">
+        {/* LOGO AREA */}
+        <div className="flex items-center gap-4 cursor-pointer shrink-0" onClick={() => setActiveTab('home')}>
+          <img 
+            src="https://s6zjlkxmjbg8agos.public.blob.vercel-storage.com/NOVO%20ESCUDO%20LIGA%20DE%20QUEBRADA.png" 
+            alt="Logo Liga de Quebrada" 
+            className="h-14 w-auto object-contain"
+          />
+          <div className="flex flex-col justify-center">
+            <span className="text-xl md:text-2xl font-black italic text-white tracking-tighter leading-none uppercase">
+              LIGA DE QUEBRADA
+            </span>
+            <span className="text-[10px] text-gray-500 font-bold uppercase tracking-[0.2em] leading-none mt-1">
+              RESPEITO • DISCIPLINA • FUTEBOL
+            </span>
+          </div>
+        </div>
+
+        {/* MENU DESKTOP */}
+        <div className="hidden lg:flex gap-5 items-center">
+          {menuItems.map((item) => {
+            const isActive = item.hasSubmenu ? item.subItems.some(sub => sub.id === activeTab) : activeTab === item.id;
+            
+            return item.hasSubmenu ? (
+                <div key={item.label} className="relative group">
+                    <button 
+                        className={`flex items-center gap-1 text-[10px] xl:text-[11px] font-black tracking-[1.5px] transition-all hover:scale-105 ${isActive ? 'text-[#FF6B00]' : 'text-gray-400 hover:text-white'}`}
+                    >
+                        {item.label} <ChevronDown size={14} strokeWidth={3} />
+                    </button>
+                    {/* Dropdown Area */}
+                    <div className="absolute top-full left-0 mt-4 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2">
+                        <div className="bg-[#0d0d0e] rounded-md shadow-2xl p-2 w-32 flex flex-col gap-1">
+                            {item.subItems.map(sub => (
+                                <button
+                                    key={sub.id}
+                                    onClick={() => setActiveTab(sub.id)}
+                                    className={`text-left px-4 py-3 text-[10px] font-bold uppercase tracking-wider rounded hover:bg-white/5 hover:text-[#FF6B00] transition-colors ${activeTab === sub.id ? 'text-[#FF6B00] bg-white/5' : 'text-gray-400'}`}
+                                >
+                                    {sub.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                <button
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id)}
+                    className={`text-[10px] xl:text-[11px] font-black tracking-[1.5px] transition-all hover:scale-105 whitespace-nowrap ${isActive ? 'text-[#FF6B00]' : 'text-gray-400 hover:text-white'}`}
+                >
+                    {item.label}
+                </button>
+            )
+          })}
+        </div>
+
+        {/* CTA BUTTON */}
+        <div className="hidden xl:flex items-center gap-4">
+          <button 
+            onClick={() => setActiveTab('login')}
+            className="bg-[#FF6B00] text-white px-6 py-2.5 font-black text-[10px] uppercase italic hover:bg-white hover:text-black transition-all shadow-[0_0_20px_rgba(255,107,0,0.3)] skew-x-[-10deg]"
+          >
+            <span className="skew-x-[10deg] inline-block">PORTAL DO TIME</span>
+          </button>
+        </div>
+
+        {/* Menu Mobile Button */}
+        <button className="lg:hidden text-[#FF6B00]" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          {isMobileMenuOpen ? <X /> : <Menu />}
+        </button>
+      </div>
+
+      {/* Menu Mobile Overlay */}
+      {isMobileMenuOpen && (
+        <div className="lg:hidden absolute top-24 left-0 w-full bg-[#0A0A0B] p-6 flex flex-col gap-4 z-50">
+           {menuItems.map((item) => (
+             item.hasSubmenu ? (
+                <div key={item.label} className="flex flex-col gap-3 pl-4 ml-1">
+                    <span className="text-sm font-black uppercase text-gray-500 tracking-widest">{item.label}</span>
+                    {item.subItems.map(sub => (
+                        <button
+                            key={sub.id}
+                            onClick={() => { setActiveTab(sub.id); setIsMobileMenuOpen(false); }}
+                            className={`text-left text-sm font-bold uppercase tracking-wider ${activeTab === sub.id ? 'text-[#FF6B00]' : 'text-white'}`}
+                        >
+                            {sub.label}
+                        </button>
+                    ))}
+                </div>
+             ) : (
+                <button
+                    key={item.id}
+                    onClick={() => { setActiveTab(item.id); setIsMobileMenuOpen(false); }}
+                    className={`text-left text-sm font-black uppercase tracking-widest ${activeTab === item.id ? 'text-[#FF6B00]' : 'text-white'}`}
+                >
+                    {item.label}
+                </button>
+             )
+          ))}
+          <button 
+            onClick={() => { setActiveTab('login'); setIsMobileMenuOpen(false); }}
+            className="bg-[#FF6B00] text-white py-3 font-black uppercase text-center mt-4"
+          >
+            PORTAL DO TIME
+          </button>
+        </div>
+      )}
+    </nav>
+    );
+  };
+
+  const HeroSection = () => (
+    <section className="relative min-h-screen flex items-center pt-24 overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <video 
+          autoPlay muted loop playsInline
+          className="w-full h-full object-cover opacity-30 grayscale"
+        >
+          <source src="https://s6zjlkxmjbg8agos.public.blob.vercel-storage.com/IMG_0452.MP4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0B] via-[#0A0A0B]/60 to-transparent"></div>
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
+        <div className="max-w-5xl space-y-4 text-left">
+          {/* Removido border */}
+          <div className="inline-flex items-center gap-3 bg-white/5 px-4 py-1.5 rounded-full">
+            <span className="w-2 h-2 bg-[#00FF00] rounded-full animate-pulse shadow-[0_0_10px_#00FF00]"></span>
+            <span className="text-[10px] font-bold tracking-[3px] text-gray-300 uppercase">TEMPORADA 2026 ONLINE</span>
+          </div>
+
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black italic text-white leading-[0.9] tracking-tighter uppercase">
+            SEU JOGO NÃO É UM <br />
+            <span className="text-[#FF6B00]">SIMPLES AMISTOSO</span>
+          </h1>
+
+          <div className="flex flex-col sm:flex-row gap-4 pt-4">
+            <button className="group bg-[#FF6B00] text-white px-10 py-5 font-black uppercase italic tracking-wider flex items-center justify-center gap-3 hover:bg-white hover:text-black transition-all shadow-[0_4px_15px_rgba(0,0,0,0.3)]">
+              CADASTRO MANDANTE <ArrowRight className="group-hover:translate-x-2 transition-transform" size={20} />
+            </button>
+            <button className="group bg-[#4A4A4A] text-white px-10 py-5 font-black uppercase italic tracking-wider flex items-center justify-center gap-3 hover:bg-white hover:text-black transition-all shadow-[0_4px_15px_rgba(0,0,0,0.3)]">
+              CADASTRO VISITANTE <ArrowRight className="group-hover:translate-x-2 transition-transform" size={20} />
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+
+  const TeamMarquee = () => {
+    const teams = [
+        { id: 1, name: 'Estrela da Norte', initials: 'EN', logo: teamLogos.santaCana }, // Placeholder logo for marquee
+        { id: 2, name: 'União da Sul', initials: 'US', logo: teamLogos.realMaster },
+        { id: 3, name: 'Favela United', initials: 'FU', logo: teamLogos.milionarios },
+        { id: 4, name: 'Ajax do Morro', initials: 'AM', logo: teamLogos.neblina },
+        { id: 5, name: 'Vila Real F.C.', initials: 'VR', logo: teamLogos.onix },
+        { id: 6, name: 'Dragões do Asfalto', initials: 'DA', logo: teamLogos.redStar },
+        { id: 7, name: 'Rastro de Fogo', initials: 'RF', logo: teamLogos.realBarcelia },
+        { id: 8, name: 'Poder da Laje', initials: 'PL', logo: teamLogos.tirandoOnda },
+    ];
+    const marqueeTeams = [...teams, ...teams, ...teams];
+    return (
+      <div className="bg-[#0A0A0B] py-10">
+        <div className="max-w-7xl mx-auto relative overflow-hidden">
+            <style>
+            {`
+                @keyframes scroll {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-50%); }
+                }
+                .animate-marquee {
+                display: flex;
+                width: max-content;
+                animation: scroll 35s linear infinite;
+                }
+            `}
+            </style>
+            <div className="animate-marquee flex items-center gap-20 px-10">
+            {marqueeTeams.map((team, index) => (
+                <div key={`${team.id}-${index}`} className="flex flex-col items-center gap-4 opacity-40 hover:opacity-100 transition-opacity duration-500 cursor-pointer group">
+                <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center transition-all">
+                    {/* Render Image Logo in Marquee */}
+                    <img src={team.logo} alt={team.name} className="w-10 h-10 object-contain" />
+                </div>
+                <span className="text-[10px] font-black text-gray-500 tracking-[3px] uppercase">{team.initials}</span>
+                </div>
+            ))}
+            </div>
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#0A0A0B] to-transparent z-10"></div>
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[#0A0A0B] to-transparent z-10"></div>
+        </div>
+      </div>
+    );
+  };
+
+  const App = () => {
+  const [activeTab, setActiveTab] = useState('home');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  return (
+    <div className="min-h-screen bg-[#0A0A0B] text-white selection:bg-[#FF6B00] selection:text-white font-['Inter'] relative">
+      
+      {/* Background Global - Favelas Sketch Watermark */}
+      <div 
+         className="fixed inset-0 z-0 pointer-events-none opacity-[0.05]"
+         style={{
+           backgroundImage: `url('https://images.unsplash.com/photo-1596720426673-e4f28bc187b3?q=80&w=2069&auto=format&fit=crop')`, // Usando uma imagem genérica de favela como placeholder
+           backgroundSize: 'cover',
+           backgroundPosition: 'center',
+           backgroundRepeat: 'no-repeat',
+           filter: 'grayscale(100%)'
+         }}
+      ></div>
+
+      <div className="relative z-10">
+      <Navigation activeTab={activeTab} setActiveTab={setActiveTab} isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
+      
+      {activeTab === 'home' && (
+        <>
+          <HeroSection />
+          <TeamMarquee />
+          
+          <div className="space-y-24 py-24">
+             {/* ================= SEÇÃO FUTSAL (LARANJA) ================= */}
+             <section className="max-w-7xl mx-auto px-6 space-y-12">
+                <div className="grid lg:grid-cols-3 gap-8">
+                    {/* Coluna Esquerda: Tabelas */}
+                    <div className="lg:col-span-2 grid md:grid-cols-2 gap-6 h-full">
+                        <RankingTableMini title="TOP 5 - MANDANTES" data={topMandantes} accentColor="#FF6B00" setActiveTab={setActiveTab} badgeLabel="FUTSAL" />
+                        <RankingTableMini title="TOP 5 - VISITANTES" data={topVisitantes} accentColor="#FFFFFF" setActiveTab={setActiveTab} badgeLabel="FUTSAL" />
+                    </div>
+                    {/* Card Elite FUTSAL */}
+                    <div className="bg-[#FF6B00]/5 border border-[#FF6B00]/10 p-8 transition-all group flex flex-col justify-between h-full rounded-xl relative shadow-2xl hover:border-[#FF6B00]/30">
+                        <div className="flex flex-col items-start">
+                            <Trophy className="text-[#FF6B00] mb-6" size={48} />
+                            <h3 className="text-4xl font-black italic uppercase mb-4 leading-[0.9] text-white text-left">
+                                A Elite da<br/>Quebrada
+                            </h3>
+                            <p className="text-gray-500 text-sm leading-relaxed mb-8 text-left max-w-sm">
+                                Acompanhe os times que lideram o ranking da Temporada 2026 e garantem vaga nos playoffs. A glória é para poucos.
+                            </p>
+                        </div>
+                        <div className="flex w-full">
+                             <button className="text-[10px] font-black text-[#FF6B00] uppercase tracking-widest flex items-center gap-2 group-hover:gap-4 transition-all whitespace-nowrap" onClick={() => setActiveTab('ranking-futsal')}>
+                                VER RANKING DE FUTSAL COMPLETO <ArrowRight size={14} />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="flex flex-col lg:flex-row gap-8 h-[340px]">
+                     {/* Card Principal Fixo (FUTSAL) */}
+                     <div className="w-full lg:w-[300px] bg-[#090909] border border-white/10 transition-all group rounded-xl flex flex-col justify-between relative shrink-0 z-20 h-full overflow-hidden shadow-2xl">
+                        
+                        {/* Header */}
+                        <div className="flex justify-end items-center p-3 bg-white/[0.02] h-[50px] relative border-b border-white/5">
+                             {/* Botão removido */}
+                        </div>
+
+                        {/* Body */}
+                        <div className="p-6 flex flex-col justify-center flex-1">
+                            <div className="flex items-center gap-1 mb-6 text-[#FF6B00]">
+                                <Shield size={30} strokeWidth={2.5} />
+                                <span className="font-black italic text-xl px-1">VS</span>
+                                <Shield size={30} strokeWidth={2.5} />
+                            </div>
+                            <h3 className="text-2xl font-black italic uppercase mb-4">PRÓXIMOS CONFRONTOS</h3>
+                            <p className="text-gray-500 text-sm leading-relaxed mb-6">Jogos decisivos que valem tudo! Confira quem vai duelar na próxima rodada e prepare a torcida.</p>
+                        </div>
+
+                        {/* Footer */}
+                        <div className="mt-auto p-3 flex items-center bg-white/[0.02] h-[45px] border-t border-white/5">
+                            <button 
+                                className="flex items-center gap-2 text-[10px] font-black text-[#FF6B00] uppercase tracking-widest w-full hover:gap-4 transition-all"
+                                onClick={() => setActiveTab('calendario-futsal')}
+                            >
+                                VER RODADA COMPLETA <ArrowRight size={14} />
+                            </button>
+                        </div>
+                    </div>
+                    
+                    {/* Loop de Jogos FUTSAL (Laranja) */}
+                    <div className="flex-1 relative overflow-hidden flex items-center group-hover:pause h-full">
+                        <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[#0A0A0B] to-transparent z-10 pointer-events-none"></div>
+                        <MatchesLoop matches={upcomingMatchesFutsal} accentColor="#FF6B00" />
+                    </div>
+                </div>
+             </section>
+
+             <SectionDivider />
+
+             {/* ================= SEÇÃO FUT7 (VERDE) ================= */}
+             <section className="max-w-7xl mx-auto px-6 space-y-12">
+                <div className="grid lg:grid-cols-3 gap-8">
+                    {/* Coluna Esquerda: Tabelas */}
+                    <div className="lg:col-span-2 grid md:grid-cols-2 gap-6 h-full">
+                        <RankingTableMini title="TOP 5 - MANDANTES" data={topMandantes} accentColor="#10B981" setActiveTab={setActiveTab} badgeLabel="FUT7" />
+                        <RankingTableMini title="TOP 5 - VISITANTES" data={topVisitantes} accentColor="#FFFFFF" setActiveTab={setActiveTab} badgeLabel="FUT7" />
+                    </div>
+
+                    {/* Card Elite FUT7 (VERDE) */}
+                    <div className="bg-[#10B981]/5 border border-[#10B981]/10 p-8 transition-all group flex flex-col justify-between h-full rounded-xl relative shadow-2xl hover:border-[#10B981]/30">
+                        <div className="flex flex-col items-start">
+                            <Trophy className="text-[#10B981] mb-6" size={48} />
+                            <h3 className="text-4xl font-black italic uppercase mb-4 leading-[0.9] text-white text-left">
+                                A Elite da<br/>Quebrada
+                            </h3>
+                            <p className="text-gray-500 text-sm leading-relaxed mb-8 text-left max-w-sm">
+                                Acompanhe os times que lideram o ranking da Temporada 2026 e garantem vaga nos playoffs. A glória é para poucos.
+                            </p>
+                        </div>
+                        <div className="flex w-full">
+                            <button className="text-[10px] font-black text-[#10B981] uppercase tracking-widest flex items-center gap-2 group-hover:gap-4 transition-all whitespace-nowrap" onClick={() => setActiveTab('ranking-fut7')}>
+                                VER RANKING DE FUT7 COMPLETO <ArrowRight size={14} />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Área de Confrontos FUT7 (VERDE) */}
+                <div className="flex flex-col lg:flex-row gap-8 h-[340px]">
+                     {/* Card Principal Fixo (FUT7) */}
+                     <div className="w-full lg:w-[300px] bg-[#090909] border border-white/10 transition-all group rounded-xl flex flex-col justify-between relative shrink-0 z-20 h-full overflow-hidden shadow-2xl">
+                         
+                        {/* Header */}
+                        <div className="flex justify-end items-center p-3 bg-white/[0.02] h-[50px] relative border-b border-white/5">
+                             {/* Botão removido */}
+                        </div>
+
+                        {/* Body */}
+                        <div className="p-6 flex flex-col justify-center flex-1">
+                            <div className="flex items-center gap-1 mb-6 text-[#10B981]">
+                                <Shield size={30} strokeWidth={2.5} />
+                                <span className="font-black italic text-xl px-1">VS</span>
+                                <Shield size={30} strokeWidth={2.5} />
+                            </div>
+                            <h3 className="text-2xl font-black italic uppercase mb-4">PRÓXIMOS CONFRONTOS</h3>
+                            <p className="text-gray-500 text-sm leading-relaxed mb-6">Jogos decisivos que valem tudo! Confira quem vai duelar na próxima rodada e prepare a torcida.</p>
+                        </div>
+
+                        {/* Footer */}
+                        <div className="mt-auto p-3 flex items-center bg-white/[0.02] h-[45px] border-t border-white/5">
+                            <button 
+                                className="flex items-center gap-2 text-[10px] font-black text-[#10B981] uppercase tracking-widest w-full hover:gap-4 transition-all"
+                                onClick={() => setActiveTab('calendario-fut7')}
+                            >
+                                VER RODADA COMPLETA <ArrowRight size={14} />
+                            </button>
+                        </div>
+                    </div>
+                    
+                    {/* Loop de Jogos FUT7 (Verde) */}
+                    <div className="flex-1 relative overflow-hidden flex items-center group-hover:pause h-full">
+                        <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[#0A0A0B] to-transparent z-10 pointer-events-none"></div>
+                        <MatchesLoop matches={upcomingMatchesFut7} accentColor="#10B981" />
+                    </div>
+                </div>
+             </section>
+          </div>
+        </>
+      )}
+
+      {/* ... restante das abas ... */}
+      {(activeTab === 'ranking-futsal' || activeTab === 'ranking-fut7') && 
+        <RankingPage category={activeTab === 'ranking-futsal' ? 'Futsal' : 'Fut7'} />
+      }
+
+      {/* Placeholder para páginas novas (Calendario, Playoffs, News, Vox, Interclubes) */}
+      {(activeTab.includes('calendario') || activeTab.includes('playoffs') || activeTab.includes('news') || activeTab === 'vox' || activeTab === 'interclubes') && (
+        <div className="pt-40 pb-20 px-6 min-h-screen flex items-center justify-center">
+            <h2 className="text-4xl font-black italic uppercase text-white tracking-tighter text-center">
+                Página em construção: <br/> <span className="text-[#FF6B00]">{activeTab.replace('-', ' ').toUpperCase()}</span>
+            </h2>
+        </div>
+      )}
+
+      {activeTab === 'login' && (
+        <div className="pt-40 flex justify-center px-6 min-h-screen items-center">
+          {/* Removido border */}
+          <div className="w-full max-w-md bg-white/5 p-10 relative">
+            <h2 className="text-4xl font-black italic uppercase text-center mb-10">Portal do Time</h2>
+            <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+              {/* Removido border */}
+              <input type="text" placeholder="ID DO CAPITÃO" className="w-full bg-white/5 p-4 outline-none focus:border-[#FF6B00] font-bold text-white transition-all uppercase placeholder:text-gray-600" />
+              {/* Removido border */}
+              <input type="password" placeholder="SENHA DE ACESSO" className="w-full bg-white/5 p-4 outline-none focus:border-[#FF6B00] font-bold text-white transition-all placeholder:text-gray-600" />
+              <button className="w-full bg-[#FF6B00] py-5 font-black uppercase italic tracking-[3px] hover:bg-white hover:text-black transition-all">
+                ENTRAR NA ARENA
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Removido border-t */}
+      <footer className="bg-black py-20">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-12">
+          
+          <div className="flex flex-wrap items-center gap-8">
+            <div className="flex flex-col justify-center">
+              <span className="text-xl md:text-2xl font-black italic text-white tracking-tighter leading-none uppercase">
+                LIGA DE QUEBRADA
+              </span>
+              <span className="text-[9px] text-gray-500 font-bold uppercase tracking-[0.2em] leading-none mt-1">
+                RESPEITO • DISCIPLINA • FUTEBOL
+              </span>
+            </div>
+
+            <div className="flex gap-4">
+               <Instagram className="text-white hover:text-[#FF6B00] transition-colors cursor-pointer" size={32} />
+               <Facebook className="text-white hover:text-[#FF6B00] transition-colors cursor-pointer" size={32} />
+            </div>
+          </div>
+          
+          <div className="mt-10 md:mt-0 text-center md:text-right">
+             <p className="text-[9px] text-gray-800 font-bold uppercase tracking-[8px]">
+               © 2026 PRODUZIDO NAS VIELAS E RUAS DAS QUEBRADAS
+             </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+    </div>
+  );
+};
+
+export default App;
