@@ -13,9 +13,9 @@ export default function MatchesLoop({ matches, accentColor }: MatchesLoopProps) 
 
   return (
     <div className="w-full overflow-hidden flex-1 h-full">
-      <div className="animate-marquee-matches flex items-center gap-6 h-full items-stretch">
+      <div className="animate-marquee-matches flex items-stretch gap-6 h-full">
         {marqueeMatches.map((match, i) => (
-          <MatchCard key={i} {...match} accentColor={accentColor} />
+          <MatchCard key={`${match.date}-${match.time}-${match.home}-${i}`} {...match} accentColor={accentColor} />
         ))}
       </div>
     </div>

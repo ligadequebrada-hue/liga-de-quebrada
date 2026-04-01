@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { Star, CloudSun, MapPin } from 'lucide-react';
 import type { Match } from '@/lib/data';
 
@@ -25,13 +24,7 @@ export default function MatchCard({
   accentColor = '#FF6B00',
   city,
 }: MatchCardProps) {
-  const [weather, setWeather] = useState<{ temp: number; description: string } | null>(null);
-
-  useEffect(() => {
-    if (city) {
-      setWeather({ temp: 24, description: 'Ensolarado' });
-    }
-  }, [city]);
+  const weather = city ? { temp: 24, description: 'Ensolarado' } : null;
 
   const renderStars = (count: number) => (
     <div className="flex gap-0.5 justify-center" style={{ color: accentColor }}>
@@ -82,7 +75,7 @@ export default function MatchCard({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={homeLogo}
-            alt={home}
+            alt={`Escudo ${home}`}
             className="w-16 h-16 object-contain drop-shadow-md transform group-hover:scale-110 transition-transform"
           />
           <span className="text-xs font-black text-white uppercase text-center leading-tight truncate w-full">
@@ -100,7 +93,7 @@ export default function MatchCard({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={awayLogo}
-            alt={away}
+            alt={`Escudo ${away}`}
             className="w-16 h-16 object-contain drop-shadow-md transform group-hover:scale-110 transition-transform"
           />
           <span className="text-xs font-black text-white uppercase text-center leading-tight truncate w-full">

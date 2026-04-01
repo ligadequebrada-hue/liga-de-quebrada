@@ -234,18 +234,28 @@ export default function HomePage() {
                 Portal do Time
               </h2>
               <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-                <input
-                  type="text"
-                  placeholder="ID DO CAPITÃO"
-                  className="w-full bg-white/5 p-4 outline-none focus:border-[#FF6B00] font-bold text-white transition-all uppercase placeholder:text-gray-600"
-                  autoComplete="username"
-                />
-                <input
-                  type="password"
-                  placeholder="SENHA DE ACESSO"
-                  className="w-full bg-white/5 p-4 outline-none focus:border-[#FF6B00] font-bold text-white transition-all placeholder:text-gray-600"
-                  autoComplete="current-password"
-                />
+                <div>
+                  <label htmlFor="captain-id" className="sr-only">ID do Capitão</label>
+                  <input
+                    id="captain-id"
+                    type="text"
+                    placeholder="ID DO CAPITÃO"
+                    className="w-full bg-white/5 border border-white/10 p-4 outline-none focus:border-[#FF6B00] font-bold text-white transition-all uppercase placeholder:text-gray-600"
+                    autoComplete="username"
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="captain-password" className="sr-only">Senha de Acesso</label>
+                  <input
+                    id="captain-password"
+                    type="password"
+                    placeholder="SENHA DE ACESSO"
+                    className="w-full bg-white/5 border border-white/10 p-4 outline-none focus:border-[#FF6B00] font-bold text-white transition-all placeholder:text-gray-600"
+                    autoComplete="current-password"
+                    required
+                  />
+                </div>
                 <button className="w-full bg-[#FF6B00] py-5 font-black uppercase italic tracking-[3px] hover:bg-white hover:text-black transition-all">
                   ENTRAR NA ARENA
                 </button>
