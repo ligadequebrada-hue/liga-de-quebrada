@@ -1,4 +1,5 @@
 import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 export default function HeroSection() {
   return (
@@ -28,10 +29,10 @@ export default function HeroSection() {
           </h1>
 
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
-            <button className="group bg-[#FF6B00] text-white px-10 py-5 font-black uppercase italic tracking-wider flex items-center justify-center gap-3 hover:bg-white hover:text-black transition-all shadow-[0_4px_15px_rgba(0,0,0,0.3)]">
+            <Link href="/cadastro/time" className="group bg-[#FF6B00] text-white px-10 py-5 font-black uppercase italic tracking-wider flex items-center justify-center gap-3 hover:bg-white hover:text-black transition-all shadow-[0_4px_15px_rgba(0,0,0,0.3)]">
               CADASTRO MANDANTE{' '}
               <ArrowRight className="group-hover:translate-x-2 transition-transform" size={20} />
-            </button>
+            </Link>
             <button className="group bg-[#4A4A4A] text-white px-10 py-5 font-black uppercase italic tracking-wider flex items-center justify-center gap-3 hover:bg-white hover:text-black transition-all shadow-[0_4px_15px_rgba(0,0,0,0.3)]">
               CADASTRO VISITANTE{' '}
               <ArrowRight className="group-hover:translate-x-2 transition-transform" size={20} />

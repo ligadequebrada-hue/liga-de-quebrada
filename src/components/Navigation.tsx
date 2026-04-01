@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import { Menu, X, ChevronDown, ArrowRight } from 'lucide-react';
 
 type NavigationProps = {
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
+  activeTab?: string;
+  setActiveTab?: (tab: string) => void;
 };
 
 const menuItems = [
@@ -51,15 +51,16 @@ const menuItems = [
   { label: 'VOX ESPORTES', id: 'vox' },
 ];
 
-export default function Navigation({ activeTab, setActiveTab }: NavigationProps) {
+export default function Navigation({ activeTab = '', setActiveTab }: NavigationProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const router = useRouter();
+  const handleTab = (tab: string) => setActiveTab?.(tab);
 
   return (
     <nav className="fixed top-0 w-full bg-[#0A0A0B]/95 backdrop-blur-xl z-[100]" role="navigation" aria-label="Menu principal">
       <div className="max-w-[1400px] mx-auto px-6 h-24 flex justify-between items-center">
         {/* LOGO */}
-        <div className="flex items-center gap-4 cursor-pointer shrink-0" onClick={() => setActiveTab('home')}>
+        <div className="flex items-center gap-4 cursor-pointer shrink-0" onClick={() => handleTab('home')}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="https://s6zjlkxmjbg8agos.public.blob.vercel-storage.com/NOVO%20ESCUDO%20LIGA%20DE%20QUEBRADA.png"
@@ -100,7 +101,7 @@ export default function Navigation({ activeTab, setActiveTab }: NavigationProps)
                     {item.subItems!.map((sub) => (
                       <button
                         key={sub.id}
-                        onClick={() => setActiveTab(sub.id)}
+                        onClick={() => handleTab(sub.id)}
                         className={`text-left px-4 py-3 text-[10px] font-bold uppercase tracking-wider rounded hover:bg-white/5 hover:text-[#FF6B00] transition-colors ${
                           activeTab === sub.id ? 'text-[#FF6B00] bg-white/5' : 'text-gray-400'
                         }`}
@@ -114,7 +115,7 @@ export default function Navigation({ activeTab, setActiveTab }: NavigationProps)
             ) : (
               <button
                 key={item.id}
-                onClick={() => setActiveTab(item.id)}
+                onClick={() => handleTab(item.id)}
                 className={`text-[10px] xl:text-[11px] font-black tracking-[1.5px] transition-all hover:scale-105 whitespace-nowrap ${
                   isActive ? 'text-[#FF6B00]' : 'text-gray-400 hover:text-white'
                 }`}
@@ -158,7 +159,7 @@ export default function Navigation({ activeTab, setActiveTab }: NavigationProps)
                   <button
                     key={sub.id}
                     onClick={() => {
-                      setActiveTab(sub.id);
+                      handleTab(sub.id);
                       setIsMobileMenuOpen(false);
                     }}
                     className={`text-left text-sm font-bold uppercase tracking-wider ${
@@ -173,7 +174,7 @@ export default function Navigation({ activeTab, setActiveTab }: NavigationProps)
               <button
                 key={item.id}
                 onClick={() => {
-                  setActiveTab(item.id);
+                  handleTab(item.id);
                   setIsMobileMenuOpen(false);
                 }}
                 className={`text-left text-sm font-black uppercase tracking-widest ${
