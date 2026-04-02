@@ -1,7 +1,31 @@
+'use client';
+
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabase';
 
 export default function HeroSection() {
+  const [badge, setBadge] = useState('TEMPORADA 2026 ONLINE');
+  const [titleWhite, setTitleWhite] = useState('SEU JOGO NÃO É UM');
+  const [titleOrange, setTitleOrange] = useState('SIMPLES AMISTOSO');
+  const [status, setStatus] = useState<'online' | 'offline'>('online');
+
+  useEffect(() => {
+    supabase
+      .from('site_config')
+      .select('id, value')
+      .in('id', ['hero_badge', 'hero_title_white', 'hero_title_orange', 'hero_status'])
+      .then(({ data }) => {
+        for (const row of data || []) {
+          if (row.id === 'hero_badge') setBadge(row.value);
+          if (row.id === 'hero_title_white') setTitleWhite(row.value);
+          if (row.id === 'hero_title_orange') setTitleOrange(row.value);
+          if (row.id === 'hero_status') setStatus(row.value as 'online' | 'offline');
+        }
+      });
+  }, []);
+
   return (
     <section className="relative min-h-screen flex items-center pt-24 overflow-hidden">
       <div className="absolute inset-0 z-0">
@@ -17,15 +41,19 @@ export default function HeroSection() {
       <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
         <div className="max-w-5xl space-y-4 text-left">
           <div className="inline-flex items-center gap-3 bg-white/5 px-4 py-1.5 rounded-full">
-            <span className="w-2 h-2 bg-[#00FF00] rounded-full animate-pulse shadow-[0_0_10px_#00FF00]"></span>
+            <span className={`w-2 h-2 rounded-full animate-pulse ${
+              status === 'online'
+                ? 'bg-[#00FF00] shadow-[0_0_10px_#00FF00]'
+                : 'bg-[#EF4444] shadow-[0_0_10px_#EF4444]'
+            }`}></span>
             <span className="text-[10px] font-bold tracking-[3px] text-gray-300 uppercase">
-              TEMPORADA 2026 ONLINE
+              {badge}
             </span>
           </div>
 
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-black italic text-white leading-[0.9] tracking-tighter uppercase">
-            SEU JOGO NÃO É UM <br />
-            <span className="text-[#FF6B00]">SIMPLES AMISTOSO</span>
+            {titleWhite} <br />
+            <span className="text-[#FF6B00]">{titleOrange}</span>
           </h1>
 
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
